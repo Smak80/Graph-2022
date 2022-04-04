@@ -16,10 +16,17 @@ namespace Graph_2022
             createGraph(matrix);
         }
 
+        public Vertex? this[Vertex vertex] =>_v.Find(v => v.Number == vertex.Number);
         protected Graph(Graph g)
         {
-            _v = g._v;
-            _e = g._e;
+            g._v.ForEach(v =>
+            {
+                _v.Add(v.CopyTo(this));
+            });
+            g._e.ForEach(e =>
+            {
+                _e.Add(new Edge(this[e.V1], this[e.V2], e.Weight));
+            });
         }
 
         private void createGraph(double[,] matrix)
@@ -37,5 +44,8 @@ namespace Graph_2022
                 }
             }
         }
+
+        public List<Edge> GetEdgesFrom(Vertex v) => _e.FindAll(e => e.ConnectedTo(v));
+        
     }
 }
